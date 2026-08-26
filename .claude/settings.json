@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash",
+      "Bash(*)",
+      "PowerShell",
+      "PowerShell(*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "NotebookEdit",
+      "Task",
+      "Agent",
+      "Artifact",
+      "Skill",
+      "TodoWrite"
+    ],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\",
+      "C:/",
+      "/c/",
+      "c:\\tmp"
+    ]
+  },
+  "sandbox": {
+    "enabled": false,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": true
+  },
+  "enableAllProjectMcpServers": true,
+  "skipDangerousModePermissionPrompt": true
+}
