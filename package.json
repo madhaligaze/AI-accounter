@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "npx --yes only-allow pnpm"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,6 @@
   "devDependencies": {
     "playwright": "^1.62.1",
     "ws": "^8.21.3"
-  }
+  },
+  "packageManager": "pnpm@12.3.4"
 }

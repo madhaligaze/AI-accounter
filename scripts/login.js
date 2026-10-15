@@ -57,8 +57,10 @@ function driveNcaDialog() {
   console.log('драйвер NCALayer завершился, код', r.code);
 
   // Ждём ухода со страницы входа — это признак успешной авторизации.
+  // Запрос авторизации (user-by-eds) сайт шлёт не сразу, а примерно через
+  // 45 секунд после подписи, поэтому ждём с запасом.
   try {
-    await page.waitForURL((u) => !u.toString().includes('/signin'), { timeout: 45000 });
+    await page.waitForURL((u) => !u.toString().includes('/signin'), { timeout: 120000 });
     console.log('УСПЕХ: вход выполнен ->', page.url());
   } catch {
     console.log('вход не подтверждён, URL:', page.url());
