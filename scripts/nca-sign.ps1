@@ -29,6 +29,17 @@ public class NativeWin {
     [DllImport("user32.dll")] public static extern bool SetProcessDPIAware();
     [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] public static extern int GetSystemMetrics(int i);
+    [DllImport("user32.dll")] public static extern short GetKeyState(int k);
+    [DllImport("user32.dll")] public static extern void keybd_event(byte vk, byte scan, uint flags, UIntPtr extra);
+
+    // SendKeys учитывает Caps Lock: при включённом пароль уходит с инвертированным
+    // регистром, и NCALayer отвечает «Неверный пароль». Поэтому на время ввода
+    // Caps Lock выключаем, а потом возвращаем как было.
+    public static bool CapsOn() { return (GetKeyState(0x14) & 1) == 1; }
+    public static void ToggleCaps() {
+        keybd_event(0x14, 0x45, 1, UIntPtr.Zero);       // KEYEVENTF_EXTENDEDKEY
+        keybd_event(0x14, 0x45, 1 | 2, UIntPtr.Zero);   // ... | KEYEVENTF_KEYUP
+    }
 
     // Windows не даёт фоновому процессу просто так забрать фокус.
     // Штатный обход — временно присоединиться к очереди ввода активного окна.
@@ -175,7 +186,10 @@ if (-not $alreadyAtCertScreen) {
     Start-Sleep -Milliseconds 300
     [System.Windows.Forms.SendKeys]::SendWait("^a")
     [System.Windows.Forms.SendKeys]::SendWait("{DEL}")
+    $capsWasOn = [NativeWin]::CapsOn()
+    if ($capsWasOn) { [NativeWin]::ToggleCaps(); Start-Sleep -Milliseconds 200; Write-Output "OK: Caps Lock выключен на время ввода" }
     Send-Literal $Password
+    if ($capsWasOn) { [NativeWin]::ToggleCaps(); Start-Sleep -Milliseconds 200 }
     Write-Output "OK: пароль введён"
     Start-Sleep -Milliseconds 700
 

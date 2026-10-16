@@ -13,6 +13,13 @@ const PROFILE = path.join(__dirname, '..', '.browser-profile');
     args: ['--remote-debugging-port=9222', '--start-maximized'],
   });
 
+  // Chrome 14x+ требует от сайта разрешения «доступ к локальной сети», чтобы
+  // тот мог подключиться к NCALayer на 127.0.0.1:13579. Без него соединение
+  // молча висит, а eGov пишет «Соединение с NCALayer прервано!».
+  for (const origin of ['https://knp.kgd.gov.kz', 'https://egov.kz', 'https://eotinish.kz', 'https://efinance.gov.kz']) {
+    await ctx.grantPermissions(['local-network-access'], { origin }).catch(() => {});
+  }
+
   // Логируем весь трафик к NCALayer: это и есть протокол подписи, который
   // использует сайт. Нужен, чтобы понять, что именно подписывается.
   await ctx.addInitScript(() => {
